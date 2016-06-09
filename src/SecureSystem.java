@@ -202,10 +202,8 @@ class ReferenceMonitor{
 		Level subLevel = SecureSystem.sm.subjectLevel(ins.sub);
 		Level objLevel = SecureSystem.rm.om.objectLevel(ins.obj);
 		if(SecurityLevel.dominates(subLevel, objLevel) || subLevel == objLevel){
-			System.out.println("I READ!!!!!!!");
 			SecureSystem.sm.setTemp(ins.sub, SecureSystem.rm.om.getObject(ins.obj).value);
 		} else {
-			System.out.println("I READ!!!!!!!");
 			SecureSystem.sm.setTemp(ins.sub, 0);
 		}
 	}
@@ -214,7 +212,6 @@ class ReferenceMonitor{
 		Level subLevel = SecureSystem.sm.subjectLevel(ins.sub);
 		Level objLevel = SecureSystem.rm.om.objectLevel(ins.obj);
 		if(!SecurityLevel.dominates(subLevel, objLevel) || subLevel == objLevel){
-			System.out.println("I WRITE!!!!!!!");
 			SecureSystem.rm.om.setValue(ins.obj, ins.value);
 		}
 	}
@@ -253,8 +250,8 @@ class InstructionObject{
 				return new BadInstruction();
 			}
 			op = "reads";
-			sub = tokens[1];
-			obj = tokens[2];
+			sub = tokens[1].toLowerCase();
+			obj = tokens[2].toLowerCase();
 			
 		//	if(! SecurityLevel.dominates(SecureSystem.getSys().sm.subjectLevel(tokens[1]), SecureSystem.getSys().rm.om.objectLevel(tokens[1])))
 			return this;
@@ -274,8 +271,8 @@ class InstructionObject{
 				return new BadInstruction();
 			}
 			op = "writes";
-			sub = tokens[1];
-			obj = tokens[2];
+			sub = tokens[1].toLowerCase();
+			obj = tokens[2].toLowerCase();
 			
 			return this;
 		}
