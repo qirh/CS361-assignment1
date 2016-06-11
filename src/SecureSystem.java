@@ -5,7 +5,7 @@
  * CS f361 assignment 1
  * assignment1 details: https://www.cs.utexas.edu/~byoung/cs361/assignment1-nonthreaded-zhao.html
  *
-*/
+ */
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -16,14 +16,14 @@ import java.util.ArrayList;
 
 /*
  * Constant security levels
-*/
+ */
 enum Level {
     HIGH, LOW 
 }
 
 /*
  *	Class SecureSystem is the driver class of the program
-*/
+ */
 public class SecureSystem{
 	
 	private static SecureSystem instance = null;
@@ -150,15 +150,14 @@ class SubjectManager{
 		return null;
 	}
 	*/
-	/*	method will set the temp value of a subject 	*/
+	/*	method will set the temp value of a Subject 	*/
 	void setTemp(String name, int temp){
 		for (Subject x: list)
 			if(x.name.equalsIgnoreCase(name))
 				x.setTemp(temp);
-	}
-	
-		
+	}		
 }
+
 /*
  * Class will be responsible for running instructions and has the ObjectManager inside of it
  */
@@ -179,13 +178,13 @@ class ReferenceMonitor{
 	
 	/*
 	 * Inner Class which will manage the objects
-	*/
+	 */
 	static class ObjectManager{
 		private static ArrayList<Object> list = new ArrayList<Object>();
 		
 		/*
 		 * The object class
-		*/
+		 */
 		private class Object{
 			String name;
 			int value;
@@ -232,19 +231,24 @@ class ReferenceMonitor{
 					return x.level;
 			return null;
 		}
+
+		/*	method will return an Object provided it's name	*/
 		Object getObject(String name){
 			for (Object x: list)
 				if(x.name.equalsIgnoreCase(name))
 					return x;
 			return null;
 		}
-		void setValue(String name, int temp){
+
+		/*	method will set an Object's value	*/
+		void setValue(String name, int value){
 			for (Object x: list)
 				if(x.name.equalsIgnoreCase(name))
-					x.setValue(temp);
+					x.setValue(value);
 		}	
 	}
 	
+	/*	method will execute a read instruction	*/
 	static void executeRead(InstructionObject ins){
 		Level subLevel = SecureSystem.sm.subjectLevel(ins.sub);
 		Level objLevel = SecureSystem.rm.om.objectLevel(ins.obj);
@@ -255,6 +259,7 @@ class ReferenceMonitor{
 		}
 	}
 	
+	/*	method will execute a write instruction	*/
 	static void executeWrite(InstructionObject ins){
 		Level subLevel = SecureSystem.sm.subjectLevel(ins.sub);
 		Level objLevel = SecureSystem.rm.om.objectLevel(ins.obj);
@@ -263,6 +268,10 @@ class ReferenceMonitor{
 		}
 	}
 }
+
+/*
+ * Class will represent Instructions
+ */
 class InstructionObject{
 	String line;
 	String op;
@@ -277,14 +286,14 @@ class InstructionObject{
 	InstructionObject(String line){
 		this.line = line;
 	}
-	
+	/*	toString method for printing */
 	public String toString() {
 		if (op.equalsIgnoreCase("reads"))
 			return(sub + " " + op + " " + obj);
 		else
 			return sub + " " + op + " value " + value + " to " + obj;
     }
-	
+	/*	method will decide if an instruction is valid or not	*/
 	InstructionObject isValid(){
 		String[] tokens = line.split("\\s+");
 		
@@ -300,7 +309,6 @@ class InstructionObject{
 			sub = tokens[1].toLowerCase();
 			obj = tokens[2].toLowerCase();
 			
-		//	if(! SecurityLevel.dominates(SecureSystem.getSys().sm.subjectLevel(tokens[1]), SecureSystem.getSys().rm.om.objectLevel(tokens[1])))
 			return this;
 		}
 		else if (tokens[0].equalsIgnoreCase("WRITE") && tokens.length == 4){
@@ -325,7 +333,9 @@ class InstructionObject{
 		}
 		return new BadInstruction();
 	}
-	
+	/*
+	 * Class BadInstruction is invoked when there is a bad instruction
+	 */
 	static final class BadInstruction extends InstructionObject {
 		String message = "Bad Instruction";
 		
@@ -339,7 +349,9 @@ class InstructionObject{
 	}
 }
 
-
+/*
+ * Reader is a class that is responsible of reading the instructionlist file
+ */
 class Reader { 
 	String path;
 	
@@ -347,6 +359,7 @@ class Reader {
 		this.path = path;
 	}
 	
+	/*	read method will read the file	*/
 	void read () throws FileNotFoundException{
 		File input = new File(path);
 		
