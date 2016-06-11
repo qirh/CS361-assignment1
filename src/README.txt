@@ -6,11 +6,13 @@ EMAIL: ovais.panjwani@utexas.edu; almto3@hotmail.com;
 
 [Program 1]
 [Description]
-There is one java file name SecureSystem.java which contains the classes SecureSystem, SecurityLevel, SubjectManager (handles subjects), ReferenceMonitor, ObjectManager, Subject, Object, InstructionObject, BadInstruction, and Reader. The both of us worked together to finish and to compile our program use "javac *.java" and run it with "java SecureSystem instructionList". So the program reads the instructionList then 
+There is one java file name SecureSystem.java which contains the classes SecureSystem, SecurityLevel, SubjectManager (handles subjects), ReferenceMonitor, ObjectManager (handles Objects), Subject, Object, InstructionObject, BadInstruction, and Reader. The both of us worked together to finish and to compile our program use "javac *.java" and run it with "java SecureSystem instructionList". So the program reads through the instruction list from the Reader class, then checks if it is a proper instruction by the InstructionObject class, then in ReferenceMonitor the dominates relations are checked to see if they pass and set the variables for the subject/object created in the beginning.
 
 [Finish]
+Finished all requirements
 
 [Test Cases]
+There are a total of 4 test cases.
 [Input of test 1]
 write hal hobj 
 read hal 

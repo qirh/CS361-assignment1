@@ -1,3 +1,11 @@
+/*
+ *
+ * Saleh Alghusson
+ * Ovais Panjwani
+ * CS f361 assignment 1
+ * assignment1 details: https://www.cs.utexas.edu/~byoung/cs361/assignment1-nonthreaded-zhao.html
+ *
+*/
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -6,11 +14,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
+/*
+ * Constant security levels
+*/
 enum Level {
     HIGH, LOW 
 }
 
+/*
+ *	Class SecureSystem is the driver class of the program
+*/
 public class SecureSystem{
 	
 	private static SecureSystem instance = null;
@@ -29,22 +42,29 @@ public class SecureSystem{
 		read(args);
 		
 	}
-	
+	/* 	will print the state of the program	*/
 	void printState(){
 		System.out.print(rm.om.printObjects());
 		System.out.print(sm.printSubjects());
 	}
 	
+	/*	default constructor	*/
 	private SecureSystem(){}
 	
+	/*	for singleton purposes	*/
 	public static SecureSystem getSys(){
 		if( instance == null)
 			instance = new SecureSystem();
 		return instance;
 	}
 	
+	/*	helper method to read input, will call read() in Reader class	*/
 	static void read(String[] args){
 		try {
+			if (args.length < 1){
+				System.out.println("No instructionlist file provided, program will exit");
+				System.exit(1);
+			}
 			new Reader(args[0]).read();
 		}
 		catch (FileNotFoundException e) {
@@ -59,8 +79,11 @@ public class SecureSystem{
 	}
 }
 
+/*
+ * Class is responsible to evaluate the dominates function 	
+ */
 class SecurityLevel{
-	
+	/*	method will return a boolean representing the dominates relation	*/
 	static boolean dominates(Level x, Level y){
 		if ((x == Level.LOW) && (y == Level.HIGH)){
 			return false;
@@ -69,9 +92,13 @@ class SecurityLevel{
 	}
 }
 
+/*
+ * Class will manage Subjects
+ */
 class SubjectManager{
 	private static ArrayList<Subject> list = new ArrayList<Subject>();
 	
+	/*	Inner class that constitutes a Subject 	*/
 	private class Subject{
 		String name;
 		int temp;
@@ -82,43 +109,48 @@ class SubjectManager{
 			this.temp = temp;
 			this.level = level;
 		}
+		/* method will set the temp value of a Subject 	*/
 		void setTemp(int temp){
 			this.temp = temp;
 		}
 	}
-		
+	/*	method to create a Subject 	*/
 	boolean createSubject(String name, Level level){
 		if(subjectExists(name))
 				return false;
 		list.add(new Subject(name, 0, level));
-		//System.out.println("Subject " + name + " added");
 		return true;
 	}
+	/*	method will return true if a Subject exists 	*/
 	boolean subjectExists(String name){
 		for (Subject x: list)
 			if(x.name.equalsIgnoreCase(name))
 				return true;
-		//System.out.println("Subject " + name + " does not exist");
 		return false;
 	}
+	/*	method will print subjects as required by the project requirements 	*/
 	String printSubjects(){
 		String s = "";
 		for (Subject x: list)
 			s = s + "\t" + x.name + " has recently read: " + x.temp + "\n";
 		return s+"\n";
 	}
+	/*	method will return the level of the Subject with provided name 	*/
 	Level subjectLevel(String name){
 		for (Subject x: list)
 			if(x.name.equalsIgnoreCase(name))
 				return x.level;
 		return null;
 	}
+	/*	method will return a subject 	
 	Subject getSubject(String name){
 		for (Subject x: list)
 			if(x.name.equalsIgnoreCase(name))
 				return x;
 		return null;
 	}
+	*/
+	/*	method will set the temp value of a subject 	*/
 	void setTemp(String name, int temp){
 		for (Subject x: list)
 			if(x.name.equalsIgnoreCase(name))
@@ -127,10 +159,13 @@ class SubjectManager{
 	
 		
 }
-
+/*
+ * Class will be responsible for running instructions and has the ObjectManager inside of it
+ */
 class ReferenceMonitor{
 	static ObjectManager om = new ObjectManager();
 	
+	/*	method will run instructions 	*/
 	static void runInstruction(InstructionObject ins){
 		System.out.println(ins);
 		if (ins != null && ins.valid){
@@ -142,9 +177,15 @@ class ReferenceMonitor{
 		SecureSystem.getSys().printState();
 	}
 	
+	/*
+	 * Inner Class which will manage the objects
+	*/
 	static class ObjectManager{
 		private static ArrayList<Object> list = new ArrayList<Object>();
 		
+		/*
+		 * The object class
+		*/
 		private class Object{
 			String name;
 			int value;
@@ -155,30 +196,36 @@ class ReferenceMonitor{
 				this.value = value;
 				this.level = level;
 			}
-			
+			/*	method will set an object's value 	*/
 			void setValue(int x){
 				this.value = x;
 			}
 		}
-		
+		/* method will create Objects 	*/
 		boolean createObject(String name, int value, Level level){
 			if(objectExists(name))
 					return false;
 			list.add(new Object(name, value, level));
 			return true;
 		}
+
+		/* method will check if an Object exists or not 	*/
 		boolean objectExists(String name){
 			for (Object x: list)
 				if(x.name.equalsIgnoreCase(name))
 					return true;
 			return false;
 		}
+
+		/* method will print Objects in the format required by document specs 	*/
 		String printObjects(){
 			String s = "The current state is: \n";
 			for (Object x: list)
 				s = s  + "\t" + x.name + " has value: " + x.value + "\n";
 			return s;
 		}
+
+		/* method will return an Object's level 	*/
 		Level objectLevel(String name){
 			for (Object x: list)
 				if(x.name.equalsIgnoreCase(name))
